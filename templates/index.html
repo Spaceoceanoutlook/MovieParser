@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Парсинг фильма</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Высота вьюпорта */
+            margin: 0; /* Убираем отступы */
+            background-color: #f0f0f0; /* Цвет фона */
+        }
+        .container {
+            text-align: center; /* Центрируем текст внутри контейнера */
+            background-color: white; /* Цвет фона контейнера */
+            padding: 20px; /* Отступы внутри контейнера */
+            border-radius: 8px; /* Закругленные углы */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Тень */
+        }
+        input[type="text"] {
+            padding: 10px; /* Отступы внутри поля ввода */
+            width: 200px; /* Ширина поля ввода */
+            border: 1px solid #ccc; /* Цвет границы */
+            border-radius: 4px; /* Закругленные углы */
+        }
+        button {
+            padding: 10px 15px; /* Отступы внутри кнопки */
+            margin-top: 10px; /* Отступ сверху */
+            border: none; /* Убираем границу */
+            border-radius: 4px; /* Закругленные углы */
+            background-color: #007bff; /* Цвет фона кнопки */
+            color: white; /* Цвет текста кнопки */
+            cursor: pointer; /* Указатель при наведении */
+        }
+        button:hover {
+            background-color: #0056b3; /* Цвет фона кнопки при наведении */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form action="/submit" method="post">
+            <input type="text" name="text" required placeholder="Введите текст здесь">
+            <br>
+            <button type="submit">Отправить</button>
+        </form>
+    </div>
+</body>
+</html>

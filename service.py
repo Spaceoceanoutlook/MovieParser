@@ -5,10 +5,14 @@ from selenium.webdriver.chrome.service import Service
 
 
 def create_driver():
+    # Для работы без GUI
+    options = webdriver.ChromeOptions()
+    options.add_argument("--headless")
     # Создаем объект для открытия закрытия браузера
     service = Service(executable_path=ChromeDriverManager().install())
+
     # Создаем объект обращения к браузеру
-    return webdriver.Chrome(service=service)
+    return webdriver.Chrome(service=service, options=options)
 
 
 def check_capcha():

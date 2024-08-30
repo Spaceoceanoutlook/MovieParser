@@ -61,6 +61,6 @@ def main(url_film):
         logger.error("Ошибка: %s", e)
 
 
-if __name__ == "__main__":
-    url = 'https://www.kinopoisk.ru/series/306084/'
-    main(url)
+# if __name__ == "__main__":
+#     url = 'https://www.kinopoisk.ru/series/306084/'
+#     main(get_url)

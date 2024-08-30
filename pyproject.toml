@@ -11,6 +11,9 @@ selenium = "^4.24.0"
 sqlalchemy = "^2.0.32"
 webdriver-manager = "^4.0.2"
 alembic = "^1.13.2"
+fastapi = "^0.112.2"
+uvicorn = "^0.30.6"
+python-multipart = "^0.0.9"
 
 
 [build-system]

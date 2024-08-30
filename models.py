@@ -17,18 +17,25 @@ class FilmGenre(Base):
     genre_id: Mapped[int] = mapped_column(ForeignKey('genres.id'), primary_key=True)
 
 
+class FilmCountry(Base):
+    __tablename__ = 'film_country'
+
+    film_id: Mapped[int] = mapped_column(ForeignKey('films.id'), primary_key=True)
+    country_id: Mapped[int] = mapped_column(ForeignKey('countries.id'), primary_key=True)
+
+
 class Film(Base):
     __tablename__ = 'films'
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     title: Mapped[str] = mapped_column(String, unique=True)
     year: Mapped[int] = mapped_column(Integer)
-    countries: Mapped[str] = mapped_column(String)
     description: Mapped[str] = mapped_column(String)
     rating: Mapped[int] = mapped_column(Integer)
     img: Mapped[str] = mapped_column(String)
-    # Связь с жанрами
+    # Связи
     genres: Mapped[List["Genre"]] = relationship("Genre", secondary="film_genre", back_populates="films")
+    countries: Mapped[List["Country"]] = relationship("Country", secondary="film_country", back_populates="films")
 
 
 class Genre(Base):
@@ -38,6 +45,15 @@ class Genre(Base):
     name: Mapped[str] = mapped_column(String, unique=True)
     # Связь с фильмами
     films: Mapped[List["Film"]] = relationship("Film", secondary="film_genre", back_populates="genres")
+
+
+class Country(Base):
+    __tablename__ = 'countries'
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String, unique=True)
+    # Связь с фильмами
+    films: Mapped[List["Film"]] = relationship("Film", secondary="film_country", back_populates="countries")
 
 
 if __name__ == '__main__':

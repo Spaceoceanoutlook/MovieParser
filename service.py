@@ -30,10 +30,10 @@ def get_information_about_the_movie(url: str):
     countries_genres = driver.find_elements('xpath', "//div[@data-tid='d5ff4cc']")
     platform = driver.find_elements('xpath', "//div[@data-tid='7cda04a5']")
     if platform[1].text[:9] in ['Платформа', 'Аудиодоро']:
-        countries = countries_genres[1].text
+        countries = countries_genres[1].text.replace(',', '').split()
         genres = countries_genres[2].text.replace(',', '').split()
     else:
-        countries = countries_genres[0].text
+        countries = countries_genres[0].text.replace(',', '').split()
         genres = countries_genres[1].text.replace(',', '').split()
     description = driver.find_element('xpath', "//p[@data-tid='bbb11238']").text
     rating = driver.find_element('xpath', "//span[@data-tid='939058a8']").text

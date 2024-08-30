@@ -1,7 +1,10 @@
 from sqlalchemy.orm import declarative_base, mapped_column, relationship
 from sqlalchemy.orm import Mapped
-from sqlalchemy import Integer, String, ForeignKey
+from sqlalchemy import Integer, String, ForeignKey, create_engine
 from typing import List
+
+# Создание движка
+engine = create_engine('sqlite:///my_films.db')
 
 # Определение базового класса
 Base = declarative_base()
@@ -35,3 +38,8 @@ class Genre(Base):
     name: Mapped[str] = mapped_column(String, unique=True)
     # Связь с фильмами
     films: Mapped[List["Film"]] = relationship("Film", secondary="film_genre", back_populates="genres")
+
+
+if __name__ == '__main__':
+    # Создание таблиц
+    Base.metadata.create_all(engine)

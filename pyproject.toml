@@ -10,6 +10,7 @@ python = "^3.12"
 selenium = "^4.24.0"
 sqlalchemy = "^2.0.32"
 webdriver-manager = "^4.0.2"
+alembic = "^1.13.2"
 
 
 [build-system]

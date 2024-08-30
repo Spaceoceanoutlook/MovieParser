@@ -54,8 +54,3 @@ class Country(Base):
     name: Mapped[str] = mapped_column(String, unique=True)
     # Связь с фильмами
     films: Mapped[List["Film"]] = relationship("Film", secondary="film_country", back_populates="countries")
-
-
-if __name__ == '__main__':
-    # Создание таблиц
-    Base.metadata.create_all(engine)

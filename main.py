@@ -62,5 +62,5 @@ def main(url_film):
 
 
 if __name__ == "__main__":
-    url = 'https://www.kinopoisk.ru/film/521689/'
+    url = 'https://www.kinopoisk.ru/series/306084/'
     main(url)

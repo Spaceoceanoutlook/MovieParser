@@ -1,6 +1,6 @@
 import logging
 from service import get_information_about_the_movie
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, joinedload
 from models import engine, Film, Genre, Country
 
 # Настройка логирования
@@ -15,7 +15,7 @@ Session = sessionmaker(bind=engine)
 def add_genres_to_film(session, film, genres):
     genres_to_add = []
     for genre_name in genres:
-        genre_name = genre_name.strip().title()
+        genre_name = genre_name.strip().capitalize()
         genre = session.query(Genre).filter_by(name=genre_name).first()
         if genre is None:
             genre = Genre(name=genre_name)
@@ -28,7 +28,7 @@ def add_genres_to_film(session, film, genres):
 def add_countries_to_film(session, film, countries):
     countries_to_add = []
     for country_name in countries:
-        country_name = country_name.strip().title()
+        country_name = country_name.strip().capitalize()
         country = session.query(Country).filter_by(name=country_name).first()
         if country is None:
             country = Country(name=country_name)
@@ -61,6 +61,12 @@ def main(url_film):
         logger.error("Ошибка: %s", e)
 
 
+def get_films_from_db():
+    with Session() as session:
+        # Подгружаем сразу связанные таблицы
+        films = session.query(Film).options(joinedload(Film.countries)).options(joinedload(Film.genres)).all()
+    return films
+
 # if __name__ == "__main__":
-#     url = 'https://www.kinopoisk.ru/series/306084/'
+#     url = ''
 #     main(get_url)

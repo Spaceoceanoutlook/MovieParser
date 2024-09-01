@@ -3,49 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Парсинг фильма</title>
+    <title>Добавить фильм</title>
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
             height: 100vh; /* Высота вьюпорта */
-            margin: 0; /* Убираем отступы */
-            background-color: #f0f0f0; /* Цвет фона */
+            display: flex;
+            justify-content: center; /* Центрирование по горизонтали */
+            align-items: center; /* Центрирование по вертикали */
+            background-color: #f0f0f0; /* Цвет фона для лучшей видимости */
         }
         .container {
-            text-align: center; /* Центрируем текст внутри контейнера */
-            background-color: white; /* Цвет фона контейнера */
-            padding: 20px; /* Отступы внутри контейнера */
-            border-radius: 8px; /* Закругленные углы */
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Тень */
+            text-align: center; /* Центрирование текста внутри контейнера */
+            background-color: white; /* Цвет фона для формы */
+            padding: 30px; /* Отступы внутри контейнера */
+            border-radius: 10px; /* Закругленные углы */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Тень для контейнера */
+            width: 300px; /* Ширина контейнера */
+        }
+        h2 {
+            margin-bottom: 20px; /* Отступ снизу для заголовка */
+            font-size: 24px; /* Размер шрифта заголовка */
+            color: #333; /* Цвет текста заголовка */
         }
         input[type="text"] {
+            width: calc(100% - 20px); /* Ширина поля ввода с учетом отступов */
             padding: 10px; /* Отступы внутри поля ввода */
-            width: 200px; /* Ширина поля ввода */
-            border: 1px solid #ccc; /* Цвет границы */
-            border-radius: 4px; /* Закругленные углы */
+            margin-bottom: 15px; /* Отступ снизу для поля ввода */
+            border: 2px solid #007BFF; /* Цвет границы */
+            border-radius: 5px; /* Закругленные углы */
+            font-size: 16px; /* Размер шрифта */
+            transition: border-color 0.3s, box-shadow 0.3s; /* Плавный переход для цвета границы и тени */
+            outline: none; /* Убираем стандартный контур */
+        }
+        input[type="text"]:focus {
+            border-color: #0056b3; /* Цвет границы при фокусе */
+            box-shadow: 0 0 5px rgba(0, 86, 179, 0.5); /* Тень при фокусе */
         }
         button {
-            padding: 10px 15px; /* Отступы внутри кнопки */
-            margin-top: 10px; /* Отступ сверху */
-            border: none; /* Убираем границу */
-            border-radius: 4px; /* Закругленные углы */
-            background-color: #007bff; /* Цвет фона кнопки */
+            background-color: #007BFF; /* Цвет фона кнопки */
             color: white; /* Цвет текста кнопки */
+            padding: 10px 15px; /* Отступы внутри кнопки */
+            border: none; /* Убираем границу */
+            border-radius: 5px; /* Закругленные углы */
+            font-size: 16px; /* Размер шрифта */
             cursor: pointer; /* Указатель при наведении */
+            transition: background-color 0.3s, transform 0.2s; /* Плавный переход для цвета фона и эффекта нажатия */
         }
         button:hover {
             background-color: #0056b3; /* Цвет фона кнопки при наведении */
+        }
+        button:active {
+            transform: scale(0.95); /* Эффект нажатия */
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <form action="/submit" method="post">
-            <input type="text" name="text" required placeholder="Введите текст здесь">
+        <h2><a href="films" style="text-decoration: none; color: #007BFF;">Перейти к фильмам</a></h2>
+        <form action="/" method="post">
+            <input type="text" name="text" required placeholder="Введите ссылку">
             <br>
-            <button type="submit">Отправить</button>
+            <button type="submit">Добавить</button>
         </form>
     </div>
 </body>

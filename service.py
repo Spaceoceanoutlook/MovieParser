@@ -50,6 +50,7 @@ def get_information_about_the_movie(url: str):
         title = list_title_and_year[0].title().strip()
     year = list_title_and_year[1].lstrip("сериал ")[:4]
 
+    # Получаем ссылку на постер
     driver.get(url + 'posters')
     check_capcha()
 
@@ -57,9 +58,9 @@ def get_information_about_the_movie(url: str):
         'xpath',
         "//div[@data-tid='b22ff31f']")
 
-    div_element = div_elements[0]
-    img_element = div_element.find_element('tag name', 'a')
-    img = img_element.get_attribute('href')
+    div_element = div_elements[0].find_element('xpath', "//div[@data-tid='ddb9865f']")
+    img_element = div_element.find_element('tag name', 'img')
+    img = img_element.get_attribute('src')
 
     return {'title': title,
             'year': year,

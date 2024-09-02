@@ -1,72 +1,34 @@
-import logging
-from service import get_information_about_the_movie
-from sqlalchemy.orm import sessionmaker, joinedload
-from models import engine, Film, Genre, Country
+from fastapi import FastAPI, Request
+import uvicorn
+from fastapi.responses import RedirectResponse
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from views import main, get_films_from_db
 
-# Настройка логирования
-logger = logging.getLogger(__name__)
-FORMAT = '%(asctime)s:%(name)s:%(levelname)s:%(message)s'
-logging.basicConfig(level=logging.INFO, format=FORMAT)
-
-# Создание сессии
-Session = sessionmaker(bind=engine)
+app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 
 
-def add_genres_to_film(session, film, genres):
-    genres_to_add = []
-    for genre_name in genres:
-        genre_name = genre_name.strip().capitalize()
-        genre = session.query(Genre).filter_by(name=genre_name).first()
-        if genre is None:
-            genre = Genre(name=genre_name)
-            genres_to_add.append(genre)
-        film.genres.append(genre)
-    session.add_all(genres_to_add)
-    logger.info('Жанры добавлены')
+@app.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
-def add_countries_to_film(session, film, countries):
-    countries_to_add = []
-    for country_name in countries:
-        country_name = country_name.strip().capitalize()
-        country = session.query(Country).filter_by(name=country_name).first()
-        if country is None:
-            country = Country(name=country_name)
-            countries_to_add.append(country)
-        film.countries.append(country)
-    session.add_all(countries_to_add)
-    logger.info('Страны добавлены')
+@app.post("/")
+async def submit_link(request: Request):
+    form_data = await request.form()  # Получаем данные формы
+    url = form_data.get('text')  # Извлекаем значение по ключу 'text'
+    main(url)  # Передаем ссылку в парсинг
+    #  status_code=303 (See Other), который указывает браузеру выполнить GET-запрос
+    return RedirectResponse(url="/films", status_code=303)  # Перенаправляем на страницу films
 
 
-def main(url_film):
-    try:
-        data = get_information_about_the_movie(url_film)
-        logger.info('Информация о фильме успешно получена')
-        with Session() as session:
-            new_film = Film(
-                title=data['title'],
-                year=data['year'],
-                description=data['description'],
-                rating=data['rating'],
-                img=data['img']
-            )
-            session.add(new_film)
-
-            add_genres_to_film(session, new_film, data['genres'])
-            add_countries_to_film(session, new_film, data['countries'])
-
-            session.commit()
-            logger.info('Успешно добавлен фильм: %s', new_film.title)
-    except Exception as e:
-        logger.error("Ошибка: %s", e)
+@app.get("/films", response_class=HTMLResponse)
+async def films(request: Request):
+    all_films = get_films_from_db()  # Получаем фильмы из базы данных
+    context = {"request": request, "films": all_films}
+    return templates.TemplateResponse("films.html", context=context)
 
 
-def get_films_from_db():
-    with Session() as session:
-        # Подгружаем сразу связанные таблицы
-        films = session.query(Film).options(joinedload(Film.countries)).options(joinedload(Film.genres)).all()
-    return films
-
-# if __name__ == "__main__":
-#     url = ''
-#     main(get_url)
+if __name__ == "__main__":
+    uvicorn.run("main:app", reload=True)

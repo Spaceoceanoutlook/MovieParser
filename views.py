@@ -76,6 +76,13 @@ def get_films_from_db():
         films.reverse()
     return films
 
+
+def get_one_film_from_db(film_id: int):
+    with Session() as session:
+        film = session.query(Film).filter(Film.id == film_id).options(joinedload(Film.countries)).options(joinedload(Film.genres)).first()
+    print(film)
+    return film
+
 # if __name__ == "__main__":
 #     url = ''
 #     main(get_url)

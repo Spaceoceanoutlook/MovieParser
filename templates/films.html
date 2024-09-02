@@ -42,21 +42,38 @@
     </style>
 </head>
 <body>
-    <h1><a href="/">Добавить фильм</a></h1>
+    <h1><a class="container" href="/">Добавить фильм</a></h1>
+
+            {% macro render_film(film) %}
+                <div class="card">
+                    <a href="/films/{{ film.id }}">
+                        <img src="{{ film.img }}" alt="{{ film.title }}" style="width: 200px; height: auto;">
+                    </a>
+                    <a href="/films/{{ film.id }}"><h2>{{ film.title }}</h2></a>
+                    <h2 class="rating">{{ film.rating }}</h2>
+                    <p><strong>Год:</strong> {{ film.year }}</p>
+                    <p><strong>Жанр:</strong> {{ film.genres | map(attribute='name') | join(", ") }}</p>
+                    <p><strong>Страна:</strong> {{ film.countries | map(attribute='name') | join(", ") }}</p>
+                    <p><strong>Описание:</strong> {{ film.description }}</p>
+                </div>
+            {% endmacro %}
+
         <div class="container">
-            {% for film in films %}
-            <div class="card">
-                <img src="{{film.img}}" alt="{{film.title}}" style="width: 200px; height: auto;">
-                <h2>{{film.title}}</h2>
-                <h2 class="rating">{{film.rating}}</h2>
-                <p><strong>Год:</strong> {{film.year}}</p>
-                <p><strong>Жанр:</strong>{{film.genres | map(attribute='name') | join(", ")}}</p>
-                <p><strong>Страна:</strong>{{film.countries | map(attribute='name') | join(", ")}}</p>
-                <p><strong>Описание:</strong>{{film.description}}</p>
-            </div>
-            {% else %}
-            <p>Нет доступных фильмов</p>
-            {% endfor %}
+        {% if film %}
+            {{ render_film(film) }}
         </div>
+            <h3><a class="container" href="/films">Назад</a></h3>
+        {% else %}
+        <div class="container">
+            {% if films %}
+                {% for film in films %}
+                    {{ render_film(film) }}
+                {% endfor %}
+            {% else %}
+                <p>Нет доступных фильмов</p>
+            {% endif %}
+        {% endif %}
+        </div>
+
 </body>
 </html>

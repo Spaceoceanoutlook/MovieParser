@@ -3,7 +3,7 @@ import uvicorn
 from fastapi.responses import RedirectResponse
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from views import main, get_films_from_db, get_one_film_from_db
+from views import main, get_films_from_db, get_one_film_from_db, get_films_by_genre, get_films_by_country
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -34,6 +34,20 @@ async def films(request: Request):
 def get_film(film_id, request: Request):
     film = get_one_film_from_db(film_id)
     context = {"request": request, "film": film}
+    return templates.TemplateResponse("films.html", context=context)
+
+
+@app.get("/films/genre/{genre_name}", response_class=HTMLResponse)
+def get_genre(genre_name, request: Request):
+    all_films = get_films_by_genre(genre_name)
+    context = {"request": request, "films": all_films}
+    return templates.TemplateResponse("films.html", context=context)
+
+
+@app.get("/films/country/{country_name}", response_class=HTMLResponse)
+def get_genre(country_name, request: Request):
+    all_films = get_films_by_country(country_name)
+    context = {"request": request, "films": all_films}
     return templates.TemplateResponse("films.html", context=context)
 
 

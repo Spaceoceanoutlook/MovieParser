@@ -39,30 +39,70 @@
             font-weight: bold;
             color: #ff9800;
         }
+
+        .back-button {
+            background-color: #4CAF50; /* Зеленый цвет фона */
+            border: none; /* Убираем границу */
+            color: white; /* Цвет текста */
+            padding: 10px 20px; /* Отступы */
+            text-align: center; /* Выравнивание текста */
+            text-decoration: none; /* Убираем подчеркивание */
+            display: inline-block; /* Чтобы кнопка вела себя как блок */
+            font-size: 16px; /* Размер шрифта */
+            margin: 4px 2px; /* Отступы вокруг кнопки */
+            cursor: pointer; /* Указатель при наведении */
+            border-radius: 5px; /* Закругленные углы */
+            transition: background-color 0.3s; /* Плавный переход цвета */
+        }
+
+        .back-button:hover {
+            background-color: #45a049; /* Цвет при наведении */
+        }
+
+        .button-container {
+            display: flex; /* Используем Flexbox */
+            justify-content: center; /* Центрируем содержимое по горизонтали */
+            margin-top: 20px; /* Отступ сверху */
+        }
+
     </style>
 </head>
 <body>
-    <h1><a class="container" href="/">Добавить фильм</a></h1>
+    <h2><a class="container" href="/films">На главную</a></h2>
+    <h2><a class="container" href="/">Добавить фильм</a></h2>
+        {% macro render_film(film) %}
+            <div class="card">
+                <a href="/films/{{ film.id }}">
+                    <img src="{{ film.img }}" alt="{{ film.title }}" style="width: 200px; height: auto;">
+                </a>
+                <a href="/films/{{ film.id }}"><h2>{{ film.title }}</h2></a>
+                <h2 class="rating">{{ film.rating }}</h2>
+                <p><strong>Год:</strong> {{film.year}}</p>
 
-            {% macro render_film(film) %}
-                <div class="card">
-                    <a href="/films/{{ film.id }}">
-                        <img src="{{ film.img }}" alt="{{ film.title }}" style="width: 200px; height: auto;">
-                    </a>
-                    <a href="/films/{{ film.id }}"><h2>{{ film.title }}</h2></a>
-                    <h2 class="rating">{{ film.rating }}</h2>
-                    <p><strong>Год:</strong> {{ film.year }}</p>
-                    <p><strong>Жанр:</strong> {{ film.genres | map(attribute='name') | join(", ") }}</p>
-                    <p><strong>Страна:</strong> {{ film.countries | map(attribute='name') | join(", ") }}</p>
-                    <p><strong>Описание:</strong> {{ film.description }}</p>
-                </div>
-            {% endmacro %}
+
+                <p><strong>Жанр:</strong>
+                    {% for genre in film.genres %}
+                        <a href="/films/genre/{{ genre.name }}">{{genre.name}}</a>
+                    {% endfor %}
+                </p>
+
+
+                <p><strong>Страна:</strong>
+                {% for country in film.countries %}
+                        <a href="/films/country/{{ country.name }}">{{country.name}}</a>
+                    {% endfor %}
+                </p>
+                <p><strong>Описание:</strong> {{ film.description }}</p>
+            </div>
+        {% endmacro %}
 
         <div class="container">
         {% if film %}
             {{ render_film(film) }}
         </div>
-            <h3><a class="container" href="/films">Назад</a></h3>
+        <div class="button-container">
+            <button class="back-button" onclick="history.back()">НАЗАД</button>
+        </div>
         {% else %}
         <div class="container">
             {% if films %}

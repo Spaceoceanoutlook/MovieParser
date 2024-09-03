@@ -30,7 +30,8 @@ def add_genres_to_film(session, film, genres):
 def add_countries_to_film(session, film, countries):
     countries_to_add = []
     for country_name in countries:
-        country_name = country_name.strip().capitalize()
+        if country_name not in ['США', 'СССР']:
+            country_name = country_name.strip().capitalize()
         country = session.query(Country).filter_by(name=country_name).first()
         if country is None:
             country = Country(name=country_name)
@@ -72,17 +73,41 @@ def main(url_film):
 def get_films_from_db():
     with Session() as session:
         # Подгружаем сразу связанные таблицы
-        films = session.query(Film).options(joinedload(Film.countries)).options(joinedload(Film.genres)).all()
+        films = (session.query(Film)
+                 .options(joinedload(Film.countries))
+                 .options(joinedload(Film.genres))
+                 .all())
         films.reverse()
     return films
 
 
 def get_one_film_from_db(film_id: int):
     with Session() as session:
-        film = session.query(Film).filter(Film.id == film_id).options(joinedload(Film.countries)).options(joinedload(Film.genres)).first()
-    print(film)
+        film = (session.query(Film)
+                .filter(Film.id == film_id)
+                .options(joinedload(Film.countries))
+                .options(joinedload(Film.genres))
+                .first())
     return film
 
-# if __name__ == "__main__":
-#     url = ''
-#     main(get_url)
+
+def get_films_by_genre(genre_name):
+    with Session() as session:
+        films = (session.query(Film)
+                 .join(Film.genres)
+                 .filter(Genre.name == genre_name)
+                 .options(joinedload(Film.countries))
+                 .options(joinedload(Film.genres))
+                 .all())
+    return films
+
+
+def get_films_by_country(country_name):
+    with (Session() as session):
+        films = (session.query(Film)
+                 .join(Film.countries)
+                 .filter(Country.name == country_name)
+                 .options(joinedload(Film.countries))
+                 .options(joinedload(Film.genres)).
+                 all())
+    return films

@@ -57,7 +57,6 @@ def get_information_about_the_movie(url: str):
     div_elements = driver.find_elements(
         'xpath',
         "//div[@data-tid='b22ff31f']")
-
     div_element = div_elements[0].find_element('xpath', "//div[@data-tid='ddb9865f']")
     img_element = div_element.find_element('tag name', 'img')
     img = img_element.get_attribute('src')

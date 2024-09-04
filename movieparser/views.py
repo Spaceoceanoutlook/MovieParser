@@ -4,6 +4,7 @@ from sqlalchemy.orm import sessionmaker, joinedload
 from movieparser.models import engine, Film, Genre, Country
 from schemas import FilmResponse
 from pydantic import ValidationError
+import bcrypt
 
 # Настройка логирования
 logger = logging.getLogger(__name__)
@@ -12,6 +13,18 @@ logging.basicConfig(level=logging.INFO, format=FORMAT)
 
 # Создание сессии
 Session = sessionmaker(bind=engine)
+
+
+def hash_password(password: str) -> str:
+    # Генерация соли и хэширование пароля
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hashed_password.decode('utf-8')
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    # Проверка соответствия пароля и хэша
+    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
 
 
 def add_genres_to_film(session, film, genres):

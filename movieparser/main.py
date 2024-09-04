@@ -3,7 +3,8 @@ import uvicorn
 from fastapi.responses import RedirectResponse
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from views import main, get_films_from_db, get_one_film_from_db, get_films_by_genre, get_films_by_country
+from views import (main, get_films_from_db, get_one_film_from_db, get_films_by_genre,
+                   get_films_by_country, hash_password)
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -16,6 +17,15 @@ async def index(request: Request):
 
 @app.get("/register", response_class=HTMLResponse)
 async def register(request: Request):
+    return templates.TemplateResponse("register.html", {"request": request})
+
+
+@app.post("/register", response_class=HTMLResponse)
+async def get_data_register(request: Request):
+    form_data = await request.form()  # Получаем данные формы
+    username = form_data.get('username')
+    password = form_data.get('password')
+    hashed_password = hash_password(password)
     return templates.TemplateResponse("register.html", {"request": request})
 
 

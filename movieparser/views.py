@@ -1,10 +1,11 @@
 import logging
 from service import get_information_about_the_movie
 from sqlalchemy.orm import sessionmaker, joinedload
-from movieparser.models import engine, Film, Genre, Country
-from schemas import FilmResponse
+from movieparser.models import engine, Film, Genre, Country, User
+from schemas import FilmResponse, UserCreate
 from pydantic import ValidationError
 import bcrypt
+from fastapi import HTTPException
 
 # Настройка логирования
 logger = logging.getLogger(__name__)
@@ -116,7 +117,7 @@ def get_films_by_genre(genre_name):
 
 
 def get_films_by_country(country_name):
-    with (Session() as session):
+    with Session() as session:
         films = (session.query(Film)
                  .join(Film.countries)
                  .filter(Country.name == country_name)
@@ -124,3 +125,17 @@ def get_films_by_country(country_name):
                  .options(joinedload(Film.genres)).
                  all())
     return films
+
+
+def register_user(user: UserCreate):
+    with Session() as session:
+        db_user = session.query(User).filter(User.username == user.username).first()
+        if db_user:
+            raise HTTPException(status_code=400, detail="Такой пользователь уже существует")
+        # Хэшируем пароль перед сохранением
+        hashed_password = hash_password(user.password)
+        new_user = User(username=user.username, password=hashed_password)
+        session.add(new_user)
+        session.commit()
+        session.refresh(new_user)
+    return new_user

@@ -3,8 +3,8 @@ import uvicorn
 from fastapi.responses import RedirectResponse
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from views import (main, get_films_from_db, get_one_film_from_db, get_films_by_genre,
-                   get_films_by_country, hash_password)
+from views import main, get_films_from_db, get_one_film_from_db, get_films_by_genre, get_films_by_country, register_user
+from schemas import UserCreate
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -25,8 +25,13 @@ async def get_data_register(request: Request):
     form_data = await request.form()  # Получаем данные формы
     username = form_data.get('username')
     password = form_data.get('password')
-    hashed_password = hash_password(password)
-    return templates.TemplateResponse("register.html", {"request": request})
+    user = UserCreate(username=username, password=password)
+    user = register_user(user)
+    response = RedirectResponse(url="/films", status_code=303)
+    response.set_cookie(key="user_id", value=str(user.id))  # Записываем user_id в куку
+    response.set_cookie(key="username", value=str(user.username))  # Записываем username в куку
+    return response
+    # return RedirectResponse(url="/films", status_code=303)
 
 
 @app.get("/login", response_class=HTMLResponse)
@@ -45,8 +50,10 @@ async def submit_link(request: Request):
 
 @app.get("/films", response_class=HTMLResponse)
 async def films(request: Request):
+    user_id = request.cookies.get("user_id")  # Получаем из куки
+    username = request.cookies.get("username")  # Получаем из куки
     all_films = get_films_from_db()  # Получаем фильмы из базы данных
-    context = {"request": request, "films": all_films}
+    context = {"request": request, "films": all_films, 'username': username}
     return templates.TemplateResponse("films.html", context=context)
 
 

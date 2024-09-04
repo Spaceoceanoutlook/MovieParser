@@ -10,6 +10,14 @@ engine = create_engine('sqlite:///my_films.db')
 Base = declarative_base()
 
 
+class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    username: Mapped[str] = mapped_column(String, unique=True, index=True)
+    password: Mapped[str] = mapped_column(String)
+
+
 class FilmGenre(Base):
     __tablename__ = 'film_genre'
 

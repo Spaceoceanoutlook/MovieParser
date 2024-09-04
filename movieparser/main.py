@@ -11,14 +11,24 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("add_film.html", {"request": request})
+
+
+@app.get("/register", response_class=HTMLResponse)
+async def register(request: Request):
+    return templates.TemplateResponse("register.html", {"request": request})
+
+
+@app.get("/login", response_class=HTMLResponse)
+async def login(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
 
 
 @app.post("/")
 async def submit_link(request: Request):
     form_data = await request.form()  # Получаем данные формы
-    url = form_data.get('text')  # Извлекаем значение по ключу 'text'
-    main(url)  # Передаем ссылку в парсинг
+    link = form_data.get('link')  # Извлекаем значение из формы где name = link
+    main(link)  # Передаем ссылку в парсинг
     #  status_code=303 (See Other), который указывает браузеру выполнить GET-запрос
     return RedirectResponse(url="/films", status_code=303)  # Перенаправляем на страницу films
 

@@ -1,7 +1,7 @@
 import logging
 from service import get_information_about_the_movie
 from sqlalchemy.orm import sessionmaker, joinedload
-from models import engine, Film, Genre, Country
+from movieparser.models import engine, Film, Genre, Country
 from schemas import FilmResponse
 from pydantic import ValidationError
 

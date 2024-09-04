@@ -9,5 +9,7 @@ http://127.0.0.1:8000/films - посмотреть базу данных фил�
 
 - git clone https://github.com/Spaceoceanoutlook/MovieParser.git
 - poetry install (Установка библиотек)
+- poetry shell (Активировать виртуальное окружение)
+- cd .\movieparser\ 
 - alembic upgrade head (Создание таблиц в БД)
-- run.py
+- main.py
